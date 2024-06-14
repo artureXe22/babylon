@@ -92,7 +92,7 @@ mv /usr/local/bin/babylond $CURRENT/bin
 ln -s $DAEMON_HOME/cosmovisor/current/bin/$DAEMON_NAME /usr/local/bin/$DAEMON_NAME
 
 echo -e '\n\e[42mDownloading a snapshot\e[0m\n' && sleep 1
-curl https://snapshots.kjnodes.com/babylon-testnet/snapshot_latest.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.babylond
+curl https://snapshots-testnet.nodejumper.io/babylon-testnet/babylon-testnet_latest.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.babylond
 wget -O $HOME/.babylond/config/addrbook.json https://snapshots.nodes.guru/babylon/addrbook.json
 
 echo -e '\n\e[42mRunning\e[0m\n' && sleep 1
