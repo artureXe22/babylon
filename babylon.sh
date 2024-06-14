@@ -92,7 +92,7 @@ mv /usr/local/bin/babylond $CURRENT/bin
 ln -s $DAEMON_HOME/cosmovisor/current/bin/$DAEMON_NAME /usr/local/bin/$DAEMON_NAME
 
 echo -e '\n\e[42mDownloading a snapshot\e[0m\n' && sleep 1
-curl https://snapshots.nodes.guru/babylon/babylon.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.babylond
+curl https://snapshots.kjnodes.com/babylon-testnet/snapshot_latest.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.babylond
 wget -O $HOME/.babylond/config/addrbook.json https://snapshots.nodes.guru/babylon/addrbook.json
 
 echo -e '\n\e[42mRunning\e[0m\n' && sleep 1
@@ -172,6 +172,17 @@ sudo systemctl restart systemd-journald
 sudo systemctl daemon-reload
 sudo systemctl enable $DAEMON_NAME
 
+echo -e '\n\e[42mGreating a wallet ...\e[0m\n' && sleep 1
+mkdir -p $HOME/.backup_babylon
+date >> $HOME/.backup_babylon/wallet.txt
+babylond keys add wallet &>>$HOME/.backup_babylon/wallet.txt
+sleep 2
+babylond create-bls-key $(babylond keys show wallet -a)
+sleep 2
+cat $HOME/.backup_babylon/wallet.txt
+echo ""
+echo -e "\033[41m\033[30mPLEASE SAVE YOUR MNEMONIC AND USE THIS WALLET TO CREATE A VALIDATOR \033[0m\n"
+sleep 5
 tee $HOME/babylon/validator.json > /dev/null << EOF
 {
   "pubkey": $(babylond tendermint show-validator),
@@ -197,3 +208,4 @@ if [[ `service $DAEMON_NAME status | grep active` =~ "running" ]]; then
   echo -e "Press \e[7mQ\e[0m for exit from status menu"
 else
   echo -e "Your $NODE node \e[31mwas not installed correctly\e[39m, please reinstall."
+fi
